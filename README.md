@@ -41,6 +41,65 @@
 
 
 
+### 2.手撕`MySQL`分组查询
+
+1. 按照某个字段进行分组 `group by`
+
+2. `having` 指定查询的条件,对分组的内容尽心过滤
+
+3. 单独使用`group by`
+
+   ```java 
+   单独使用查询出来的是分组的第一条记录的值
+   select * form student group by gender;
+   ```
+
+4.  结合聚合函数使用
+
+   ```Java
+   select count(*) ,gender from student group by gender;
+   ```
+
+5. 结合having一起使用
+
+   ```c++
+   select sum(grade),gender from student group by gender having sum(grade)<300
+   ```
+
+   **having和where的区别:**
+
+   都是根据条件进行过滤,
+
+   having后面可以跟随聚合函数
+
+
+
+## Linux
+
+### 1.`Linux`中断命令
+
+1. 中断
+   1. CPU暂停当前的程序执行,转去处理突发事件,处理完后返回原程序继续执行
+   2. 中断请求线: 中断唯一标识的数值
+   3. 中断处理函数:内核执行对应的处理函数,中断的优先级最高
+2. 分类
+   1. 中断<外部中断或异步中断>: 外设向处理器发出中断请求
+   2. 异常<内部中断或同步异常>: 处理器执行指令错误 
+3.  **终端命令**
+   1. `CTRL+C` 强制**中断**程序执行
+   2. `CTRL+z`任务中断,进程**挂起**
+   3. `CTRL+d`特殊字符 `EOF`
+   4. `CTRL+\`**退出**
+   5. `kill pid` 
+
+
+
+**扩展: 后台进程管理命令:**
+
+1. `jobs`查看当前有多少在后台运行的命令
+2. `fg`将后台的命令调至前台执行
+3. `bg`将后台暂停的命令继续执行
+
 
 
 ## 操作系统
@@ -117,7 +176,7 @@
               数据单向流动,是在具有亲缘关系之间的进程之间通讯,存在于内存
               ```
 
-       	 2.  命名管道
+              	 2.  命名管道
 
              ```java
              数据双向流动,无关进程之间可以数据交换
@@ -140,6 +199,250 @@
               ```java
               共享一个给定的存储区,最快的方式,进程直接对内存数据进行读取
               ```
+
+
+
+### 2.什么是缓存溢出
+
+1. 缓冲区
+   1. 写入的缓冲区的数据超出缓冲区的大小,溢出的数据覆盖合法的数据 [**溢出**]
+   2. 一段可读可写的内存区域
+2.  危害
+   1. 程序崩溃,拒绝服务
+   2. 执行恶意代码
+   3. 缓冲区攻击 [驱使操作系统执行恶意的代码]
+3.  原因
+   1. 没有检查用户的合法输入
+4.  
+
+
+
+
+
+
+
+## Java基础
+
+### 1.`Java`四种引用
+
+**目的: 决定对象的生命周期利用`JVM`进行垃圾回收**
+
+1. 强引用
+
+   ```java
+   直接创建对象赋值,只要有引用变量就永远不被回收,宁可抛出异常;
+   
+   中断强引用和某个对象之间的关联,直接就是变量置null
+   ```
+
+2. 软引用
+
+   ```Java
+   内存空间足够,垃圾回收器就不会回收他;
+   
+   否则对象会被回收,get获取对象就是null
+   
+   ```
+
+3. 弱引用
+
+   ```java
+   只要垃圾回收器需要回收,弱引用必定会被回收
+   ```
+
+4. 虚引用
+
+   ```java
+   任何时候都有可能会被回收
+   ```
+
+
+
+### 2.`Java synchronized`的类锁和对象锁
+
+1. 对象锁  
+
+   1. 仅仅有关键字synchronized
+   2. **也称实例锁**
+   3. 防止其他线程同时访问该实例的synchronized方法块
+   4. 每个实例拥有自己的监视块
+
+2.  类锁 
+
+   1. static synchronized
+   2. **也称全局锁**,
+   3. 控制类的所有实例的并发访问 [限制都线程该该类的所有实例同时访问jvm中对应的代码块]
+   4. 所有实例公用一个监视块
+
+3.  demo
+
+   ```
+   pulbic class Something(){  
+       public synchronized void isSyncA(){}  
+       public synchronized void isSyncB(){}  
+       public static synchronized void cSyncA(){}  
+       public static synchronized void cSyncB(){}  
+   }
+   ```
+
+   
+
+4. 总结
+
+   ```java
+   类锁和对象锁是两个不一样的锁，控制着不同的区域，它们是互不干扰的。同样，线程获得对象锁的同时，也可以获得该类锁，即同时获得两个锁，这是允许的。
+   ```
+
+   
+
+
+
+## 计算机网络
+
+### 1.`OSI`网络模型 [七层]
+
+1. 物理层
+
+   ```java
+   提供物理连接
+   
+   关心比特流传输
+   
+   关心机械,电气,功能和规程特性
+   
+   IEEE 802.2的电器协议
+   ```
+
+   
+
+2. 数据链路层
+
+   ```Java
+   PPP SLIP ARPANE协议,隧道通讯协议,思科的CDP协议,地址解析协议
+   
+   物理寻址
+   
+   将原比特流转换成逻辑传输线路
+   
+   
+   ```
+
+   
+
+3. 网络层
+
+   ```Java
+   ICMP  ARP RARP IP,安全协议AH,路由协议OSPF最短路径优先
+   
+   外部网关EGP 内部网关IGRP IP/IPV6
+   
+   控制子网运行
+   
+   分组传输
+   
+   路由选择
+   
+   逻辑编址
+   ```
+
+   
+
+4. 传输层
+
+   ```JAVA 
+   TCP  UDP
+   
+   分割数据
+   
+   保证数据有效到达端
+   ```
+
+   
+
+5. 会话层
+
+   ```JAVA 
+   SMTP  DNS
+   
+   SSL TLS安全协议
+   
+   不同机器上用户之间简历管理会话
+   
+   ```
+
+   
+
+6. 表示层
+
+   ```JAVA 
+   SNMP TELNET
+   
+   信息的语法语义和之间的关联 [加密解密,转换翻译,压缩解压]
+   ```
+
+   
+
+7. 应用层
+
+   ```JAVA
+   HTTP TFTP FTP SMTP应用程序协议
+   ```
+
+   
+
+8.  ![img](http://img.blog.csdn.net/20160731161720376)
+
+### 2.`TCP/IP`模型 [四层]
+
+1. 应用层: 传输协议
+
+2. 传输层:  TCP UDP
+
+3. 网络层: IP ICMP
+
+   ```Java
+   IP层传输
+   				点到点传输
+   				传输IP分组
+   
+   TCP层传输
+   				端到端的传输
+   				传输TCP段
+   ```
+
+   
+
+4. 物理链路层: 根据需要选择不同的物理链路
+
+
+
+### 3.网络设别工作在那一层
+
+1. 网卡 
+
+   物理层 
+
+2. 中继器
+
+    物理层 [复原网络中的信号,从新发送到其他网段]
+
+3. 集线器
+
+   物理层 [连接各个物理设备]
+
+4. 网桥
+
+   数据链路层的MAC子层上<介质访问控制层> [网段中相同协议传输数据包]
+
+5. 交换机
+
+   数据链路层 [和网桥类似的功能] 
+
+6. 路由器
+
+   网络层   [分组转发和路由] 
+
+7. 
 
 
 
@@ -325,20 +628,197 @@
             }
             ```
 
-            
+
+
+
+
+## Android框架使用
+
+### 1.`Glide`的使用  [加载图片]
+
+1. 特点
+
+   1. 可以加载`gif`动图
+   2. 播放本地`MP4`
+   3. 加载默认图片 `.fallback(id)`
+   4. 重置大小`.resize(int,int)`
+   5. 裁剪图片`.fitcenter()`
+   6. 缩放图片`thumbnail(0.1f)`
+   7. 圆角图片`bitmaptransform(new )`
+   8. 缓存  [自定义缓存] `diskCacheStrategy`
+   9. 修改缓存大小,位置,图片质量
+   10. 请求优先级,加载图片的优先级`.priority(int)`
+
+2.  加载网络图片
+
+   `Glide.with(context).load(url).into(imageview)`
+
+3.  加载文件
+
+   ```Java
+   File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"Test.jpg");
+   Glide.with(context).load(file).into(imageViewFile);
+   ```
 
    
 
-2.  
+4.  根据id加载
+
+   ```Java
+   int resourceId = R.mipmap.ic_launcher;
+   Glide.with(context).load(resourceId).into(imageViewResource);
+   ```
+
+   
+
+5.  uri加载
+
+   ```Java
+   Glide.with(context).load(uri).into(imageViewUri);
+   ```
+
+
+
+
+
+### 2. `EventBus`的使用
+
+1. 发布订阅<观察者模式>的事件总线
+2. 作用
+   1. 简化组件之间通讯 [**两个fragment之间的**]
+   2. 组件和后台线程间的通讯  [**网络请求**]
+3.  使用
+   1. `event`事件   [任意类型的对象]
+   2. `subscribe`订阅者   [指定线程模型]
+   3. `publisher`发布者  [任意线程位置发送事件`post方法`]
+4. 线程模型
+   1. `posting`事件发布和事件接受在同一个线程  [默认]  <避免执行耗时操作,因会阻塞事件传递>
+   2. `main`在ui线程中处理事件,不能耗时操作,ui线程本来就不能耗时操作
+   3. `background`在子线程中处理事件  [**一般是网络请求等耗时操作**] <子线程发布事件就在子线程中处理事件,**ui线程发布事件就创建新的子线程处理事件**>
+   4. `async`无论在哪个线程发布事件,都将新建子线程处理事件
+
+
+
+### 3.`Rxjava`通讯机制
+
+1.  扩展的观察者模式
+   1. `observable`被观察者
+   2. `observer`观察者
+   3. `subscribe`订阅
+2.  事件回调方法
+   1. `onnext`<类似于点击>
+   2. `oncompleted`事件队列完成
+   3. `onerror`错误
+3.  使用
+   1. 创建观察者
+      1.  [重写三个回调方法] `observer`  
+      2. <这个的一个抽象类`subscriber`>  用法一致  
+      3. [onstart方法在所在线程处理事件,不能更新ui,更新ui需要用doonsubscribe方法中]
+   2. 创建被观察者`observable`  
+      1. 从写call方法,内部调用`subscriber.onnext()  oncompleted() `等方法,一次执行事件
+      2. 还有`just() from() `
+   3. `subscribe`订阅事件
+      1. 把观察者和被观察者关联起来`observable.subscribe(observer);`
+4.  `Action0()  Action1()`将对象打包起来内部打包了不同的回调方法
+5.  `scheduler`线程控制器  [指定一段代码运行在什么样的线程下]
+   1.  默认下: 在哪一个线程调用subscriber()就在该线程产生事件,就在该线程消费事件
+   2. `immediate()`默认情况,在当前线程运行
+   3. `newThread()`总是创建新的线程执行代码
+   4. `io`io操作[网络,数据库,文件读取],内部实现有一个无数量上限的线程池
+   5. `computation`CPU计算密集型
+   6. `mainthread`Android主线程
+6.  **变换**
+   1. 加工整个序列,转换成不同的事件序列
+   2. `Func1`具有返回值的包装
+   3. `map` `flatmap`
+
+
+
+
+
+## Android基础
+
+### 1.你常用的组件有哪些
+
+| 常用组件                       | 用途                             |
+| ------------------------------ | -------------------------------- |
+| text view                      | 文本显示                         |
+| edit text                      | 注册框,搜索框                    |
+| button                         | 登录按钮                         |
+| float action button <悬浮按钮> | flutter中印象深刻的一个按钮,登录 |
+| recycle view                   | list view少用了,动态列表         |
+| switch                         | 白天和黑夜模式的开关             |
+| scroll view                    | 上下滑动                         |
+| fragment                       | 结合view page使用布局切换        |
+| image view                     | 显示各种图片                     |
+| check box                      | 订单的选择                       |
+| web view                       | 新闻网页的显示                   |
+| progress bar                   | 加载进度                         |
+| spinner                        | 下拉消息选项                     |
+| rating bar                     | 订单评价                         |
+| search view                    | 搜索框                           |
+| constraint layout              | 最喜欢的一个布局                 |
+| linear layout                  | 常常使用等比例均分的属性         |
+| grid layout                    | 搜索预选择的格子                 |
+| horizontal scroll view         | 横向布局 ,切换页面               |
+| tool bar                       | 首页的顶部文字显示               |
+| bottom navigation view         | 主界面的底部导航栏               |
+| view                           | 一些分割线                       |
+
+
+
+### 2.`Android`四大组件
+
+1. activity
+
+   1. 单独的窗口
+   2. 通过intent通讯
+   3. 必须在`AndroidManifest.xml`配置文件中声明
+
+2. service
+
+   1. 用于后台完成用户操作
+   2. 启动,调用`startService()`
+      1. 与启动服务的组件无关
+      2. 可以无限期运行
+      3. 销毁服务需要调用`stopSelf() 或者 stopService()`
+   3. 绑定,调用`bindService()`
+      1. 与绑定服务的组件相关联
+   4. 配之文件需要声明service
+
+3. content provider
+
+   1. 不同程序之间的数据共享
+   2. 使用uri标实数据集
+
+4. broadcast receiver
+
+   1.  对感兴趣的外部事件进行接受并作出响应
+   2. 可以启用一个activity或者service来响应接收到的信息
+   3. 也可以使用notificationmanager通知用户
+   4. 动态注册
+      1. 生命周期随注册的activity共存亡
+   5. 静态注册
+      1. 生命周期独立于程序
+
+   
 
 
 
 
 
 
-=======
-**但不仅限于Android方面,希望通过此方式把自己的知识台阶一步一步搭起,最后通向offer的大门,知识汇聚,知识分享,开源的力量是无穷尽的,也祝大家早些时日提取自己心满意足的offer**
->>>>>>> 0c3a7a427952880af2f41179ff52edb72f7697ad
 
 
 
+## 算法题
+
+### 1.归并排序
+
+### 2. 汉诺塔
+
+### 3.数组反转
+
+### 4.给一对无序数组，给一个target整数，找出数组中两个数字相加为target，并输出下标(不能用哈希)
+
+### 5.数组反转，给一个target整数，每target长度反转一次
